@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "cascade-bot"
+name = "lemontea-bot"
 version = "0.1.0"
-description = "cascade-bot"
-authors = []
+description = "lemontea-bot"
+authors = ["Isoheptane"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

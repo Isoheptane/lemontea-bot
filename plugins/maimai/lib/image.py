@@ -11,15 +11,16 @@ from . import rating
 
 from PIL import ImageFont, ImageDraw, Image
 
+from .. path import resource_path
 from .. path import picture_path
 
 b40_bg = Image.open(picture_path.joinpath("b40_bg.png"))
 b50_bg = Image.open(picture_path.joinpath("b50_bg.png"))
 
-montserrat_bold = str(Path(os.path.dirname(__file__)).joinpath("static", "font", "Montserrat-Bold.ttf"))
-montserrat_semibold = str(Path(os.path.dirname(__file__)).joinpath("static", "font", "Montserrat-SemiBold.ttf"))
-notosans_bold = str(Path(os.path.dirname(__file__)).joinpath("static", "font", "NotoSansSC-Bold.otf"))
-notosans_regular = str(Path(os.path.dirname(__file__)).joinpath("static", "font", "NotoSansSC-Regular.otf"))
+montserrat_bold     = resource_path.joinpath("font", "Montserrat-Bold.ttf")
+montserrat_semibold = resource_path.joinpath("font", "Montserrat-SemiBold.ttf")
+notosans_bold       = resource_path.joinpath("font", "NotoSansSC-Bold.otf")
+notosans_regular    = resource_path.joinpath("font", "NotoSansSC-Regular.otf")
 
 title_font          = ImageFont.truetype(notosans_bold, 20)
 score_font          = ImageFont.truetype(montserrat_bold, 32)
