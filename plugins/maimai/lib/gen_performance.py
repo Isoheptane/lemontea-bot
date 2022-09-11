@@ -5,7 +5,6 @@ from . image import *
 
 from PIL import ImageFont, ImageDraw, Image
 
-
 async def generate_performance(performance: Performance, rank: int) -> Image.Image:
     image = chart_image[performance.difficulty_index].copy()
 
