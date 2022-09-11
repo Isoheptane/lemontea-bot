@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+plugins/maimai/resources/cover/
