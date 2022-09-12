@@ -8,11 +8,12 @@ from . rating import compute_rating_new
 
 from PIL import ImageFont, ImageDraw, Image
 
-name_font   = ImageFont.truetype(notosans_regular, 48)
-info_font   = ImageFont.truetype(montserrat_semibold, 28)
+name_font   = ImageFont.truetype(notosans_regular, 36)
+info_font   = ImageFont.truetype(montserrat_semibold, 24)
 
 b40_bg = Image.open(picture_path.joinpath("b40_bg.png"))
 b50_bg = Image.open(picture_path.joinpath("b50_bg.png"))
+avatar_mask = Image.open(picture_path.joinpath("avatar_mask.png")).split()[0]
 
 def to_full_char(text: str) -> str:
     s: str = ""
@@ -24,7 +25,7 @@ def to_full_char(text: str) -> str:
     return s
 
 
-async def generate_best(info: Player, b50: bool) -> Image.Image:
+async def generate_best(info: Player, b50: bool, avatar: Image.Image = None) -> Image.Image:
 
     result = b50_bg.copy() if b50 else b40_bg.copy()
 
@@ -41,31 +42,24 @@ async def generate_best(info: Player, b50: bool) -> Image.Image:
         base_rating += performance.rating
 
     draw = ImageDraw.Draw(result)
-    # Draw name
+    # Draw user info
+    if not avatar is None:
+        result.paste(avatar.resize((180, 180)), (510, 50), mask = avatar_mask)
     draw.text(
-        (500, 108), 
+        (725, 147), 
         to_full_char(info.nickname), 
         font = name_font, 
         anchor = "lm", 
         fill = (63, 63, 63)
     )
-
-    if b50:
-        draw.text(
-            (755, 195), 
-            f"Best 50 Simulation: {base_rating}", 
-            font = info_font, 
-            anchor = "mm", 
-            fill = (63, 63, 63), 
-        )
-    else:
-        draw.text(
-            (755, 195), 
-            f"Best 40: {info.base_rating} + {info.rank_rating}", 
-            font = info_font, 
-            anchor = "mm", 
-            fill = (63, 63, 63), 
-        )
+    draw.text(
+        (935, 210), 
+        f"Best 50 Simulation: {base_rating}" if b50 else
+        f"Best 40: {info.base_rating} + {info.rank_rating}",
+        font = info_font, 
+        anchor = "mm", 
+        fill = (63, 63, 63), 
+    )
 
     # Draw best 25 / 35
     old_count = 0

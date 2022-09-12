@@ -7,22 +7,27 @@ from pathlib import Path
 from math import floor
 
 from . lib.player import *
-from . lib.image import image_to_bytes
+from . lib.image import download_image, image_to_bytes
 from . lib.gen_best import generate_best
 
 async def best(bot: Bot, event:MessageEvent, args: Message, b50: False):
 
     text_args = str(args).strip().split(" ")
 
+    qid: int = None
+
     if len(args) >= 2 and args[1].type == "at":
-        info, status = await get_player_info("qq", args[1].data["qq"], b50)
+        qid = args[1].data["qq"]
+        info, status = await get_player_info("qq", qid, b50)
     elif len(text_args) <= 1:
-        info, status = await get_player_info("qq", event.user_id, b50)
+        qid = event.user_id
+        info, status = await get_player_info("qq", qid, b50)
     else:
         info, status = await get_player_info("username", text_args[1], b50)
         if (status == 400):
             try:
-                info, status = await get_player_info("qq", int(text_args[1]), b50)
+                qid = int(text_args[1])
+                info, status = await get_player_info("qq", qid, b50)
             except:
                 info, status = None, 400
 
@@ -55,10 +60,16 @@ async def best(bot: Bot, event:MessageEvent, args: Message, b50: False):
             MessageSegment.text(f"获取玩家信息失败了呢……(HTTP {status})")
         ]))
         return
+
+    if not qid is None:
+        avatar = await download_image(f"https://q1.qlogo.cn/g?b=qq&nk={qid}&s=640")
+        image = await generate_best(info, b50, avatar)
+    else:
+        image = await generate_best(info, b50)
     
     await bot.send(event, Message([
         MessageSegment.reply(event.message_id),
-        MessageSegment.image(image_to_bytes(await generate_best(info, b50)))
+        MessageSegment.image(image_to_bytes(image))
     ]))
     return
         
