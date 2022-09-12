@@ -1,9 +1,28 @@
-from . player import Player
+import math
 
-from . gen_performance import generate_performance
+from .. path import picture_path
 from . image import *
+from . gen_performance import generate_performance
+from . player import Player
+from . rating import compute_rating_new
 
 from PIL import ImageFont, ImageDraw, Image
+
+name_font   = ImageFont.truetype(notosans_regular, 48)
+info_font   = ImageFont.truetype(montserrat_semibold, 28)
+
+b40_bg = Image.open(picture_path.joinpath("b40_bg.png"))
+b50_bg = Image.open(picture_path.joinpath("b50_bg.png"))
+
+def to_full_char(text: str) -> str:
+    s: str = ""
+    for c in text:
+        if (ord(c) <= 255):
+            s += chr(ord(c) + 65248)
+        else:
+            s += c
+    return s
+
 
 async def generate_best(info: Player, b50: bool) -> Image.Image:
 
@@ -13,12 +32,12 @@ async def generate_best(info: Player, b50: bool) -> Image.Image:
 
     for performance in info.chart_old:
         if b50:
-            performance.rating = rating.compute_rating_new(performance.level, performance.achievements)
+            performance.rating = compute_rating_new(performance.level, performance.achievements)
         base_rating += performance.rating
 
     for performance in info.chart_new:
         if b50:
-            performance.rating = rating.compute_rating_new(performance.level, performance.achievements)
+            performance.rating = compute_rating_new(performance.level, performance.achievements)
         base_rating += performance.rating
 
     draw = ImageDraw.Draw(result)
