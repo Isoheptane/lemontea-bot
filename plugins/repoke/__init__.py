@@ -11,8 +11,7 @@ def check_poke(event: Event):
 matcher = on_notice(rule = check_poke)
 
 @matcher.handle()
-async def repoke(bot: Bot, event: PokeNotifyEvent):
-    if (event.target_id == event.self_id):
-        await bot.send(event, Message([
-            MessageSegment(type = "poke", data = {"qq": event.user_id})
-        ]))
+async def on_poke(bot: Bot, event: PokeNotifyEvent):
+    await bot.send(event, Message([
+        MessageSegment(type = "poke", data = {"qq": event.user_id})
+    ]))
