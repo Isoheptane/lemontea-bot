@@ -3,6 +3,7 @@ import math
 from .. path import picture_path
 from . image import *
 from . gen_performance import generate_performance
+from . gen_rating import generate_rating
 from . player import Player
 from . rating import compute_rating_new
 
@@ -42,9 +43,10 @@ async def generate_best(info: Player, b50: bool, avatar: Image.Image = None) -> 
         base_rating += performance.rating
 
     draw = ImageDraw.Draw(result)
-    # Draw user info
+    # Draw user name
     if not avatar is None:
         result.paste(avatar.resize((180, 180)), (510, 50), mask = avatar_mask)
+    # Draw b40/b50 info
     draw.text(
         (725, 147), 
         to_full_char(info.nickname), 
@@ -54,12 +56,15 @@ async def generate_best(info: Player, b50: bool, avatar: Image.Image = None) -> 
     )
     draw.text(
         (935, 210), 
-        f"Best 50 Simulation: {base_rating}" if b50 else
+        f"Best 50 Simulation" if b50 else
         f"Best 40: {info.base_rating} + {info.rank_rating}",
         font = info_font, 
         anchor = "mm", 
         fill = (63, 63, 63), 
     )
+    # Draw DX Rating
+    rating_image = generate_rating(base_rating if b50 else (info.base_rating + info.rank_rating), b50)
+    result.paste(rating_image, (700, 40), mask = rating_image.split()[3])
 
     # Draw best 25 / 35
     old_count = 0
