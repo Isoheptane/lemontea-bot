@@ -1,6 +1,5 @@
 from nonebot.log import logger
 import aiohttp
-from typing import Tuple
 from PIL import Image
 
 from ..path import cover_path, resource_path

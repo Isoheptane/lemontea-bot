@@ -1,7 +1,3 @@
-import asyncio
-from email.mime import base
-import json
-from platform import platform
 import aiohttp
 
 from typing import Dict, Optional, Tuple, List
