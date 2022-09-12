@@ -1,3 +1,7 @@
+from ast import Bytes
+import re
+import aiohttp
+import requests
 from io import BytesIO
 from PIL import Image
 
@@ -12,3 +16,12 @@ def image_to_bytes(image: Image.Image, format = "PNG"):
     buffer = BytesIO()
     image.save(buffer, format)
     return buffer.getvalue()
+
+async def download_image(url: str, timeout: float = 5.0) -> Image.Image:
+    async with aiohttp.request(
+        "GET", 
+        url, 
+        timeout = aiohttp.ClientTimeout(timeout)
+    ) as response:
+        data = await response.content.read()
+        return Image.open(BytesIO(data))
