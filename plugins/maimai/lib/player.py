@@ -1,6 +1,7 @@
+from ctypes import Union
 import aiohttp
 
-from typing import Dict, Optional, Tuple, List
+from typing import Dict, Optional, Tuple, List, Union
 
 from . performance import Performance
 
@@ -27,7 +28,7 @@ class Player:
             self.chart_old.append(Performance(chartData))
 
 
-async def get_player_info(type: str, id: str, b50: bool) -> Tuple[Optional[Player], int]:
+async def get_player_info(type: str, id: str, b50: bool) -> Tuple[Optional[Union[Player, Exception, str]], int]:
     
     request = {type: id, "b50": True} if b50 else {type: id}
     
@@ -35,14 +36,13 @@ async def get_player_info(type: str, id: str, b50: bool) -> Tuple[Optional[Playe
         async with aiohttp.request(
             "POST", 
             "https://www.diving-fish.com/api/maimaidxprober/query/player",
-            json = request
+            json = request,
+            timeout = aiohttp.ClientTimeout(5.0)
         ) as response:
-            if response.status == 400:
-                return None, 400
-            if response.status == 403:
-                return None, 403
+            if response.status != 200:
+                return None, response.status
             data = await response.json()
             info = Player(data)
             return info, response.status
-    except:
-        return None, -1
+    except Exception as ex:
+        return ex, -1

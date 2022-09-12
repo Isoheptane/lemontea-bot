@@ -1,5 +1,6 @@
 from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
+from nonebot.log import logger
 
 import os
 from pathlib import Path
@@ -26,9 +27,10 @@ async def best(bot: Bot, event:MessageEvent, args: Message, b50: False):
                 info, status = None, 400
 
     if status == -1:
+        logger.error(f"Failed to get player info: {info}")
         await bot.send(event, Message([
             MessageSegment.reply(event.message_id),
-            MessageSegment.text("获取玩家信息失败。")
+            MessageSegment.text(f"获取玩家信息失败了呢……(Error: {info})")
         ]))
         return
     
@@ -43,6 +45,14 @@ async def best(bot: Bot, event:MessageEvent, args: Message, b50: False):
         await bot.send(event, Message([
             MessageSegment.reply(event.message_id),
             MessageSegment.text("该玩家禁止了其他人查询成绩。")
+        ]))
+        return
+
+    if status != 200:
+        logger.error(f"Failed to get player info: HTTP {status}")
+        await bot.send(event, Message([
+            MessageSegment.reply(event.message_id),
+            MessageSegment.text(f"获取玩家信息失败了呢……(HTTP {status})")
         ]))
         return
     
