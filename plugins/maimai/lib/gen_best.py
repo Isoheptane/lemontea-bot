@@ -7,7 +7,7 @@ from PIL import ImageFont, ImageDraw, Image
 
 async def generate_best(info: Player, b50: bool) -> Image.Image:
 
-    result = b50_bg.copy() if b50 else b40_bg()
+    result = b50_bg.copy() if b50 else b40_bg.copy()
 
     base_rating = 0
 
