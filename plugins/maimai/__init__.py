@@ -1,12 +1,7 @@
-from cgitb import text
-import re
 from nonebot import on_command
 from nonebot.params import CommandArg
 from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
-
-import os
-from pathlib import Path
 
 from . best import best
 from . query_player import player

@@ -2,10 +2,6 @@ from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
 from nonebot.log import logger
 
-import os
-from pathlib import Path
-from math import floor
-
 from . lib.player import *
 from . lib.image import download_image, image_to_bytes
 from . lib.gen_best import generate_best
