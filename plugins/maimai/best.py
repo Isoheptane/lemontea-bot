@@ -1,6 +1,7 @@
 from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
 from nonebot.log import logger
+import nonebot.log as l
 
 from . lib.player import *
 from . lib.image import download_image, image_to_bytes
@@ -28,7 +29,7 @@ async def best(bot: Bot, event:MessageEvent, args: Message, b50: False):
                 info, status = None, 400
 
     if status == -1:
-        logger.error(f"Failed to get player info: {info}")
+        logger.opt(colors = True, exception = info).error("Failed to get player info: Exception")
         await bot.send(event, Message([
             MessageSegment.reply(event.message_id),
             MessageSegment.text(f"获取玩家信息失败了呢……(Error: {info})")
