@@ -51,6 +51,9 @@ sync_image = {
     "fsdp"  : Image.open(picture_path.joinpath(f"sync_fsdp.png")).resize((60, 40))
 }
 
+type_dx_image = Image.open(picture_path.joinpath(f"chart_type_dx.png"))
+type_sd_image = Image.open(picture_path.joinpath(f"chart_type_sd.png"))
+
 diff_color = [
     (69, 193, 36),
     (255, 186, 1),
@@ -67,10 +70,15 @@ async def generate_performance(performance: Performance, rank: int) -> Image.Ima
     image.paste(cover, (25, 25))
     cover.close()
 
+    image.paste(
+        type_dx_image if performance.dx_chart else type_sd_image, 
+        (68, 88), 
+        type_dx_image.split()[3] if performance.dx_chart else type_sd_image.split()[3]
+    )
+
     draw = ImageDraw.Draw(image)
 
     title_image = Image.new("RGBA", (240, 30), (0, 0, 0, 0))
-
     title_draw = ImageDraw.Draw(title_image)
     title_draw.text((0, 23), performance.title, font = title_font, anchor = "ls")
     image.paste(title_image, (130, 23), title_image.split()[3])
