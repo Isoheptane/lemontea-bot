@@ -27,8 +27,6 @@ def to_full_char(text: str) -> str:
 
 
 async def generate_best(info: Player, b50: bool, avatar: Image.Image = None) -> Image.Image:
-
-
     result = b50_bg.copy() if b50 else b40_bg.copy()
 
     base_rating = 0
