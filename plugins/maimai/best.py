@@ -32,7 +32,7 @@ async def best(bot: Bot, event:MessageEvent, args: Message, b50: False):
         logger.opt(colors = True, exception = info).error("Failed to get player info: Exception")
         await bot.send(event, Message([
             MessageSegment.reply(event.message_id),
-            MessageSegment.text(f"获取玩家信息失败了呢……(Error: {info})")
+            MessageSegment.text(f"获取玩家信息失败了呢……({type(info).__module__}.{type(info).__name__}: {info})")
         ]))
         return
     
