@@ -36,5 +36,5 @@ async def help(bot: Bot, event:MessageEvent, message: Message):
         MessageSegment.text("b40 [查分器用户名 | QQ | @消息] -查询用户的 Best 40 数据\n"),
         MessageSegment.text("b50 [查分器用户名 | QQ | @消息] -查询用户的 Best 50 数据\n"),
         MessageSegment.text("tsong <歌曲 ID> -查询歌曲信息\n"),
-        MessageSegment.text("tchart <难度> <歌曲 ID> -查询谱面信息")
+        MessageSegment.text("tchart <难度><歌曲 ID> -查询谱面信息")
     ]))

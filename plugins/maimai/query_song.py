@@ -2,6 +2,7 @@ from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
 
 from typing import List
+import regex as regex
 
 from . lib.cover import get_cover
 from . lib.image import image_to_bytes
@@ -43,8 +44,13 @@ async def query_song(bot: Bot, event: MessageEvent, args: List[str], text: bool 
 async def query_chart(bot: Bot, event: MessageEvent, args: List[str], text: bool = False):
 
     try:
-        song_id = int(args[2])
-        chart_diff = diff_name_index[args[1].lower()]
+        match = regex.match(
+            r"(绿|黄|红|紫|白|basic|advanced|expert|master|remaster|re:master)([\d]+)", 
+            args[1], 
+            regex.I
+        )
+        song_id = int(match.group()[1])
+        chart_diff = diff_name_index[match.group()[0].lower()]
     except:
         return
 
