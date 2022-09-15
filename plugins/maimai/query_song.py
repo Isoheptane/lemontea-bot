@@ -49,8 +49,8 @@ async def query_chart(bot: Bot, event: MessageEvent, args: List[str], text: bool
             args[1], 
             regex.I
         )
-        song_id = int(match.group()[1])
-        chart_diff = diff_name_index[match.group()[0].lower()]
+        song_id = int(match.group(2))
+        chart_diff = diff_name_index[match.group(1).lower()]
     except:
         return
 
