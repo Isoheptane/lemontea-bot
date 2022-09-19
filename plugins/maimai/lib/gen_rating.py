@@ -37,7 +37,7 @@ def get_rating_bg(rating: int, b50: bool) -> Image.Image:
         index += 1
     if (rating >= (14000 if b50 else 8000)):
         index += 1
-    if (rating >= (15000 if b50 else 9000)):
+    if (rating >= (15000 if b50 else 8500)):
         index += 1
     return rating_bg[index].copy()
 
