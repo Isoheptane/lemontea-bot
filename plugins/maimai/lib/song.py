@@ -24,7 +24,7 @@ class Song:
         self.song_id        = int(data["id"])
         self.title          = data["basic_info"]["title"]
         self.artist         = data["basic_info"]["artist"]
-        self.genre          = data["basic_info"]["artist"]
+        self.genre          = data["basic_info"]["genre"]
         self.version        = data["basic_info"]["from"]
         self.release_date   = data["basic_info"]["release_date"]
         self.bpm            = float(data["basic_info"]["bpm"])
