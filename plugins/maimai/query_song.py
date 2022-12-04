@@ -9,7 +9,7 @@ from . lib.image import image_to_bytes
 from . lib.song import Song, song_list
 from . lib.chart import Chart, diff_name, diff_name_index
 
-async def query_song(bot: Bot, event: MessageEvent, args: List[str], text: bool = False):
+async def query_song(bot: Bot, event: MessageEvent, args: str, text: bool = False):
     try:
         song_id = int(args[1])
     except:
@@ -41,7 +41,7 @@ async def query_song(bot: Bot, event: MessageEvent, args: List[str], text: bool 
     else:
         pass
 
-async def query_chart(bot: Bot, event: MessageEvent, args: List[str], text: bool = False):
+async def query_chart(bot: Bot, event: MessageEvent, args: str, text: bool = False):
 
     try:
         match = regex.match(

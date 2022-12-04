@@ -1,18 +1,19 @@
-from nonebot import on_command
-from nonebot.params import CommandArg
+from nonebot import on_shell_command
+from nonebot.params import ShellCommandArgv
 from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
+
+from typing import Union, List
 
 from . best import best
 from . query_player import player
 from . query_song import query_song, query_chart
 
-matcher = on_command("maimai", aliases = {"mai"})
+matcher = on_shell_command("maimai", aliases = {"mai"})
 @matcher.handle()
-async def _(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
+async def _(bot: Bot, event: MessageEvent, args: List[Union[str, MessageSegment]] = ShellCommandArgv()):
 
-    text_args = str(args).strip().split(" ")
-    command = text_args[0]
+    command = args[0]
 
     if (command == "help"):
         await help(bot, event, args)
@@ -23,9 +24,9 @@ async def _(bot: Bot, event: MessageEvent, args: Message = CommandArg()):
     elif (command == "player"):
         await player(bot, event, args)
     elif (command == "tsong"):
-        await query_song(bot, event, text_args, text = True)
+        await query_song(bot, event, args[1], text = True)
     elif (command == "tchart"):
-        await query_chart(bot, event, text_args, text = True)
+        await query_chart(bot, event, args[1], text = True)
 
 
 async def help(bot: Bot, event:MessageEvent, message: Message):

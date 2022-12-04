@@ -1,24 +1,23 @@
+import imp
+from fastapi import FastAPI
 from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
+
+from typing import List, Union
 
 from . lib.player import *
 from . lib.rank import rank_name
 
-async def player(bot: Bot, event:MessageEvent, args: Message):
+async def player(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegment]]):
 
-    text_args = str(args).strip().split(" ")
-
-    if len(args) >= 2 and args[1].type == "at":
-        info, status = await get_player_info("qq", args[1].data["qq"], b50 = False)
-    elif len(text_args) <= 1:
-        info, status = await get_player_info("qq", event.user_id, b50 = False)
-    else:
-        info, status = await get_player_info("username", text_args[1], b50 = False)
-        if (status == 400):
-            try:
-                info, status = await get_player_info("qq", int(text_args[1]), b50 = False)
-            except:
-                info, status = None, 400
+    if len(args) >= 2:
+        if isinstance(args[1], MessageSegment) and args[1].type == "at":
+            qid = args[1].data["qq"]
+            info, status = await get_player_info("qq", qid, b50 = False)
+        else:
+            info, status = await get_player_info("username", args[1], b50 = False)
+            if (status == 400):
+                info, status = await get_player_info("qq", args[1], b50 = False)
     
     if status == -1:
         await bot.send(event, Message([

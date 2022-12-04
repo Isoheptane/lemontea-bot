@@ -1,9 +1,11 @@
 from ast import Bytes
+from logging import exception
 import re
 import aiohttp
 import requests
 from io import BytesIO
 from PIL import Image
+from typing import Union
 
 from .. path import resource_path
 
@@ -17,11 +19,14 @@ def image_to_bytes(image: Image.Image, format = "PNG"):
     image.save(buffer, format)
     return buffer.getvalue()
 
-async def download_image(url: str, timeout: float = 5.0) -> Image.Image:
-    async with aiohttp.request(
-        "GET", 
-        url, 
-        timeout = aiohttp.ClientTimeout(timeout)
-    ) as response:
-        data = await response.content.read()
-        return Image.open(BytesIO(data))
+async def download_image(url: str, timeout: float = 5.0) -> Union[Image.Image, Exception]:
+    try:
+        async with aiohttp.request(
+            "GET", 
+            url, 
+            timeout = aiohttp.ClientTimeout(timeout)
+        ) as response:
+            data = await response.content.read()
+            return Image.open(BytesIO(data))
+    except Exception as ex:
+        return ex

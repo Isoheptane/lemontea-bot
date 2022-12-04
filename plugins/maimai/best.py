@@ -1,32 +1,30 @@
+import imp
 from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
 from nonebot.log import logger
-import nonebot.log as l
+
+from PIL import Image
+from typing import Union, List
 
 from . lib.player import *
 from . lib.image import download_image, image_to_bytes
 from . lib.gen_best import generate_best
 
-async def best(bot: Bot, event:MessageEvent, args: Message, b50: False):
-
-    text_args = str(args).strip().split(" ")
+async def best(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegment]], b50: False):
 
     qid: int = None
 
-    if len(args) >= 2 and args[1].type == "at":
-        qid = args[1].data["qq"]
-        info, status = await get_player_info("qq", qid, b50)
-    elif len(text_args) <= 1:
+    if len(args) >= 2:
+        if isinstance(args[1], MessageSegment) and args[1].type == "at":
+            qid = args[1].data["qq"]
+            info, status = await get_player_info("qq", qid, b50)
+        else:
+            info, status = await get_player_info("username", args[1], b50)
+            if (status == 400):
+                info, status = await get_player_info("qq", args[1], b50)
+    else:
         qid = event.user_id
         info, status = await get_player_info("qq", qid, b50)
-    else:
-        info, status = await get_player_info("username", text_args[1], b50)
-        if (status == 400):
-            try:
-                qid = int(text_args[1])
-                info, status = await get_player_info("qq", qid, b50)
-            except:
-                info, status = None, 400
 
     if status == -1:
         logger.opt(colors = True, exception = info).error("Failed to get player info: Exception")
@@ -60,7 +58,11 @@ async def best(bot: Bot, event:MessageEvent, args: Message, b50: False):
 
     if not qid is None:
         avatar = await download_image(f"https://q1.qlogo.cn/g?b=qq&nk={qid}&s=640")
-        image = await generate_best(info, b50, avatar)
+        if (isinstance(avatar, Image.Image)):
+            image = await generate_best(info, b50, avatar)
+        else:
+            logger.warning(f"Failed to download QQ avatar. ({type(avatar).__module__}.{type(avatar).__name__}: {avatar})")
+            image = await generate_best(info, b50)
     else:
         image = await generate_best(info, b50)
     
