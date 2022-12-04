@@ -1,5 +1,3 @@
-import imp
-from fastapi import FastAPI
 from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
 
@@ -8,7 +6,7 @@ from typing import List, Union
 from . lib.player import *
 from . lib.rank import rank_name
 
-async def player(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegment]]):
+async def player(bot: Bot, event: MessageEvent, args: List[Union[str, MessageSegment]]):
 
     if len(args) >= 2:
         if isinstance(args[1], MessageSegment) and args[1].type == "at":
@@ -18,11 +16,13 @@ async def player(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegm
             info, status = await get_player_info("username", args[1], b50 = False)
             if (status == 400):
                 info, status = await get_player_info("qq", args[1], b50 = False)
+    else:
+        return
     
     if status == -1:
         await bot.send(event, Message([
             MessageSegment.reply(event.message_id),
-            MessageSegment.text("获取玩家信息失败。")
+            MessageSegment.text(f"获取玩家信息失败了呢……({type(info).__module__}.{type(info).__name__}: {info})")
         ]))
         return
     

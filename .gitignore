@@ -3,3 +3,4 @@ __pycache__/
 *$py.class
 
 plugins/maimai/resources/cover/
+plugins/maimai/resources/user_custom/

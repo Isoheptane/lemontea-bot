@@ -9,6 +9,7 @@ from typing import Union, List
 from . lib.player import *
 from . lib.image import download_image, image_to_bytes
 from . lib.gen_best import generate_best
+from . lib.user_custom import UserData, get_user_custom
 
 async def best(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegment]], b50: False):
 
@@ -21,7 +22,8 @@ async def best(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegmen
         else:
             info, status = await get_player_info("username", args[1], b50)
             if (status == 400):
-                info, status = await get_player_info("qq", args[1], b50)
+                qid = args[1]
+                info, status = await get_player_info("qq", qid, b50)
     else:
         qid = event.user_id
         info, status = await get_player_info("qq", qid, b50)
@@ -57,14 +59,18 @@ async def best(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegmen
         return
 
     if not qid is None:
-        avatar = await download_image(f"https://q1.qlogo.cn/g?b=qq&nk={qid}&s=640")
-        if (isinstance(avatar, Image.Image)):
-            image = await generate_best(info, b50, avatar)
-        else:
-            logger.warning(f"Failed to download QQ avatar. ({type(avatar).__module__}.{type(avatar).__name__}: {avatar})")
-            image = await generate_best(info, b50)
+        custom = get_user_custom(qid)
+        if custom.avatar == None:
+            avatar = custom.avatar
+            avatar = await download_image(f"https://q1.qlogo.cn/g?b=qq&nk={qid}&s=640")
+            if (isinstance(avatar, Image.Image)):
+                custom.avatar = avatar
+            else:
+                logger.warning(f"Failed to download QQ avatar. ({type(avatar).__module__}.{type(avatar).__name__}: {avatar})")
+                image = await generate_best(info, b50)
+        image = await generate_best(info, b50, custom)
     else:
-        image = await generate_best(info, b50)
+        image = await generate_best(info, b50, UserData(None, None, None))
     
     await bot.send(event, Message([
         MessageSegment.reply(event.message_id),

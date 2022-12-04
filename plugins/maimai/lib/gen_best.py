@@ -6,11 +6,13 @@ from . gen_performance import generate_performance
 from . gen_rating import generate_rating
 from . player import Player
 from . rating import compute_rating_new
+from . user_custom import UserData
 
 from PIL import ImageFont, ImageDraw, Image
 
 name_font   = ImageFont.truetype(notosans_regular, 36)
 info_font   = ImageFont.truetype(montserrat_semibold, 24)
+title_font   = ImageFont.truetype(notosans_regular, 24)
 
 b40_bg = Image.open(picture_path.joinpath("b40_bg.png"))
 b50_bg = Image.open(picture_path.joinpath("b50_bg.png"))
@@ -26,7 +28,8 @@ def to_full_char(text: str) -> str:
     return s
 
 
-async def generate_best(info: Player, b50: bool, avatar: Image.Image = None) -> Image.Image:
+async def generate_best(info: Player, b50: bool, custom: UserData
+) -> Image.Image:
     result = b50_bg.copy() if b50 else b40_bg.copy()
 
     base_rating = 0
@@ -43,8 +46,8 @@ async def generate_best(info: Player, b50: bool, avatar: Image.Image = None) -> 
 
     draw = ImageDraw.Draw(result)
     # Draw user name
-    if not avatar is None:
-        result.paste(avatar.resize((180, 180)), (510, 50), mask = avatar_mask)
+    if not custom.avatar is None:
+        result.paste(custom.avatar.resize((180, 180)), (510, 50), mask = avatar_mask)
     # Draw b40/b50 info
     draw.text(
         (725, 147), 
@@ -53,14 +56,23 @@ async def generate_best(info: Player, b50: bool, avatar: Image.Image = None) -> 
         anchor = "lm", 
         fill = (63, 63, 63)
     )
-    draw.text(
-        (935, 210), 
-        f"Best 50 Simulation" if b50 else
-        f"Best 40: {info.base_rating} + {info.rank_rating}",
-        font = info_font, 
-        anchor = "mm", 
-        fill = (63, 63, 63), 
-    )
+    if custom.title != None:
+        draw.text(
+            (935, 208), 
+            custom.title,
+            font = title_font, 
+            anchor = "mm", 
+            fill = (63, 63, 63), 
+        )
+    else:
+        draw.text(
+            (935, 210), 
+            f"Best 50 Simulation" if b50 else
+            f"Best 40: {info.base_rating} + {info.rank_rating}",
+            font = info_font, 
+            anchor = "mm", 
+            fill = (63, 63, 63), 
+        )
     # Draw DX Rating
     rating_image = generate_rating(base_rating if b50 else (info.base_rating + info.rank_rating), b50)
     result.paste(rating_image, (700, 40), mask = rating_image.split()[3])

@@ -1,22 +1,25 @@
+from email import message
 from nonebot import on_shell_command
 from nonebot.params import ShellCommandArgv
 from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
+from nonebot.log import logger
 
 from typing import Union, List
 
 from . best import best
 from . query_player import player
 from . query_song import query_song, query_chart
+from . custom import set_custom
 
 matcher = on_shell_command("maimai", aliases = {"mai"})
 @matcher.handle()
 async def _(bot: Bot, event: MessageEvent, args: List[Union[str, MessageSegment]] = ShellCommandArgv()):
-
+    
     command = args[0]
 
     if (command == "help"):
-        await help(bot, event, args)
+        await help(bot, event)
     elif (command == "b40"):
         await best(bot, event, args, b50 = False)
     elif (command == "b50"):
@@ -27,9 +30,11 @@ async def _(bot: Bot, event: MessageEvent, args: List[Union[str, MessageSegment]
         await query_song(bot, event, args[1], text = True)
     elif (command == "tchart"):
         await query_chart(bot, event, args[1], text = True)
+    elif (command == "set"):
+        await set_custom(bot, event, args)
 
 
-async def help(bot: Bot, event:MessageEvent, message: Message):
+async def help(bot: Bot, event:MessageEvent):
     await bot.send(event, Message([
         MessageSegment.reply(event.message_id),
         MessageSegment.text("Lemon Bot maimai 帮助：\n"),
