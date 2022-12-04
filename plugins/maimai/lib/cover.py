@@ -1,4 +1,3 @@
-from turtle import down
 from nonebot.log import logger
 from PIL import Image
 
