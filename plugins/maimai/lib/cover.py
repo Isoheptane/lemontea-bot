@@ -1,3 +1,4 @@
+from turtle import down
 from nonebot.log import logger
 from PIL import Image
 
@@ -18,13 +19,13 @@ async def get_cover(id: int) -> Image.Image:
 
     if not file_path.exists():
         # Auto download cover from diving fish's site
-        download_path = "https://www.diving-fish.com/covers/" + file_name
+        download_url = "https://www.diving-fish.com/covers/" + file_name
         logger.info(f"Downloading cover {file_name}...")
-        try:
-            cover = await download_image(download_path)
+        cover = await download_image(download_url)
+        if isinstance(cover, Image.Image):
             cover.save(str(file_path))
-        except:
-            logger.info(f"Failed to download cover {file_name}...")
+        else:
+            logger.opt(colors = True, exception = cover).warning(f"Failed to download cover {file_name}")
     
     if file_path.exists():
         return Image.open(file_path)
