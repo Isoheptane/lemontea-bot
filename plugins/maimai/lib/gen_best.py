@@ -85,7 +85,7 @@ async def generate_best(info: Player, b50: bool, custom: UserData) -> Image.Imag
     for chart in info.chart_old:
         chart_image = await generate_performance(chart, old_count + 1)
         place_x = int(old_count % 5) * 400 + 45
-        place_y = math.floor(old_count / 5) * 125 + 275
+        place_y = math.floor(old_count / 5) * 125 + 285
         result.paste(chart_image, (place_x, place_y), mask = chart_image.split()[3])
         chart_image.close()
         old_count += 1
@@ -95,7 +95,7 @@ async def generate_best(info: Player, b50: bool, custom: UserData) -> Image.Imag
         for chart in info.chart_new:
             chart_image = await generate_performance(chart, b15_count + 1)
             place_x = int(b15_count % 5) * 400 + 45
-            place_y = math.floor(b15_count / 5) * 125 + 1215
+            place_y = math.floor(b15_count / 5) * 125 + 1225
             result.paste(chart_image, (place_x, place_y), mask = chart_image.split()[3])
             chart_image.close()
             b15_count += 1
@@ -104,7 +104,7 @@ async def generate_best(info: Player, b50: bool, custom: UserData) -> Image.Imag
         for chart in info.chart_new:
             chart_image = await generate_performance(chart, b15_count + 1)
             place_x = int(b15_count % 5) * 400 + 45
-            place_y = math.floor(b15_count / 5) * 125 + 965
+            place_y = math.floor(b15_count / 5) * 125 + 975
             result.paste(chart_image, (place_x, place_y), mask = chart_image.split()[3])
             chart_image.close()
             b15_count += 1
