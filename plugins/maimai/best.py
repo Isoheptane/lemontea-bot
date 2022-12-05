@@ -65,7 +65,7 @@ async def best(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegmen
                 custom.avatar = avatar
             else:
                 logger.warning(f"Failed to download QQ avatar. ({type(avatar).__module__}.{type(avatar).__name__}: {avatar})")
-                image = await generate_best(info, b50)
+                image = await generate_best(info, b50, custom)
         image = await generate_best(info, b50, custom)
     else:
         image = await generate_best(info, b50, UserData())
