@@ -3,4 +3,5 @@ __pycache__/
 *$py.class
 
 resources/maimai/cover/
+resources/maimai/song_list.json
 data/
