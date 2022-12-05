@@ -60,7 +60,7 @@ async def best(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegmen
     if not qid == None:
         custom = get_user_custom(qid)
         if custom.avatar == None:
-            avatar = await download_image(f"https://q1.qlogo.cn/g?b=qq&nk={qid}&s=640")
+            avatar = await download_image(f"https://q1.qlogo.cn/g?b=qq&nk={qid}&s=640", 10.0)
             if (isinstance(avatar, Image.Image)):
                 custom.avatar = avatar
             else:

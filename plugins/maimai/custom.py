@@ -27,7 +27,7 @@ async def set_avatar(bot: Bot, event: MessageEvent, args: List[Union[str, Messag
         return
 
     image_url = args[2].data["url"]
-    image = await download_image(image_url)
+    image = await download_image(image_url, 20.0)
 
     if isinstance(image, Exception):
         logger.warning(f"Failed to download image. ({type(image).__module__}.{type(image).__name__}: {image})")
@@ -55,7 +55,7 @@ async def set_frame(bot: Bot, event: MessageEvent, args: List[Union[str, Message
         return
 
     image_url = args[2].data["url"]
-    image = await download_image(image_url)
+    image = await download_image(image_url, 20.0)
 
     if isinstance(image, Exception):
         logger.warning(f"Failed to download image. ({type(image).__module__}.{type(image).__name__}: {image})")
