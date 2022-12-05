@@ -11,27 +11,30 @@ from . best import best
 from . query_player import player
 from . query_song import query_song, query_chart
 from . custom import set_custom
+from . scorelist import scorelist
 
 matcher = on_shell_command("maimai", aliases = {"mai"})
 @matcher.handle()
 async def _(bot: Bot, event: MessageEvent, args: List[Union[str, MessageSegment]] = ShellCommandArgv()):
     
-    command = args[0]
+    command = str(args[0]).lower()
 
-    if (command == "help"):
+    if command == "help":
         await help(bot, event)
-    elif (command == "b40"):
-        await best(bot, event, args, b50 = False)
-    elif (command == "b50"):
+    elif command == "b40":
+        await best(bot, event, args)
+    elif command == "b50":
         await best(bot, event, args, b50 = True)
-    elif (command == "player"):
+    elif command == "player":
         await player(bot, event, args)
-    elif (command == "tsong"):
+    elif command == "tsong":
         await query_song(bot, event, args[1], text = True)
-    elif (command == "tchart"):
+    elif command == "tchart":
         await query_chart(bot, event, args[1], text = True)
-    elif (command == "set"):
+    elif command == "set":
         await set_custom(bot, event, args)
+    elif command in ["scorelist", "分数列表", "scorelistid", "分数列表id"]:
+        await scorelist(bot, event, args)
 
 
 async def help(bot: Bot, event:MessageEvent):

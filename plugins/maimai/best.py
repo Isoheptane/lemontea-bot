@@ -10,7 +10,7 @@ from . lib.image import download_image, image_to_bytes
 from . lib.gen_best import generate_best
 from . lib.user_custom import UserData, get_user_custom
 
-async def best(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegment]], b50: False):
+async def best(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegment]], b50 = False):
 
     qid: int = None
 

@@ -5,7 +5,7 @@ from . image import *
 from . gen_performance import generate_performance
 from . gen_rating import generate_rating
 from . player import Player
-from . rating import compute_rating_new
+from . achievements import compute_rating_new
 from . user_custom import UserData
 
 from PIL import ImageFont, ImageDraw, Image

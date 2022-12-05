@@ -89,9 +89,9 @@ async def generate_performance(performance: Performance, rank: int) -> Image.Ima
     draw.text((231, 102), "▶", font = rating_font, anchor = "lm", fill = diff_color[performance.difficulty_index])
     draw.text((248, 111), f"{performance.rating}", font = rating_font, anchor = "ls", fill = diff_color[performance.difficulty_index])
     image.paste(rank_image[performance.rate], (305, 49), rank_image[performance.rate].split()[3])
-    if performance.fc != "":
-        image.paste(combo_image[performance.fc], (285, 82), combo_image[performance.fc].split()[3])
-    if performance.fs != "":
-        image.paste(sync_image[performance.fs], (323, 82), sync_image[performance.fs].split()[3])
+    if performance.full_combo != "":
+        image.paste(combo_image[performance.full_combo], (285, 82), combo_image[performance.full_combo].split()[3])
+    if performance.full_sync != "":
+        image.paste(sync_image[performance.full_sync], (323, 82), sync_image[performance.full_sync].split()[3])
     
     return image
