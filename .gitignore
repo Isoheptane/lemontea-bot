@@ -2,5 +2,5 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-plugins/maimai/resources/cover/
-plugins/maimai/resources/user_custom/
+resources/maimai/cover/
+data/

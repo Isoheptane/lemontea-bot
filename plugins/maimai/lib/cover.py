@@ -6,9 +6,6 @@ from . image import download_image
 
 default_cover = Image.open(resource_path.joinpath("default_cover.png"))
 
-if not cover_path.exists():
-    cover_path.mkdir()
-
 async def get_cover(id: int) -> Image.Image:
     if id >= 10001:
         id -= 10000
