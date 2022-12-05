@@ -1,4 +1,5 @@
 import math
+import re
 
 from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
@@ -79,8 +80,8 @@ async def scorelist(bot: Bot, event:MessageEvent, args: List[Union[str, MessageS
     score_max = 101.0
 
     try:
-        if "-" in level_filter:
-            levels = level_filter.split("-")
+        if "-" in level_filter or "~" in level_filter:
+            levels = re.split("-|~", level_filter)
             level_min = float(levels[0])
             level_max = float(levels[1])
         elif level_filter.endswith("+"):
@@ -103,8 +104,8 @@ async def scorelist(bot: Bot, event:MessageEvent, args: List[Union[str, MessageS
 
     if score_filter != None:
         try:
-            if "-" in score_filter:
-                scores = score_filter.split("-")
+            if "-" in score_filter or "~" in score_filter:
+                scores = re.split("-|~", score_filter)
                 score_min = float(scores[0])
                 score_max = float(scores[1])
             else:
