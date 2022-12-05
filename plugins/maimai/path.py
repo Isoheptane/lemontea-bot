@@ -1,6 +1,4 @@
-import os
 from pathlib import Path
-from venv import create
 
 resource_path = Path("./resources/maimai/")
 
