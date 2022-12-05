@@ -1,5 +1,4 @@
 import os
-from imaplib import Time2Internaldate
 from PIL import Image
 from typing import Optional
 
