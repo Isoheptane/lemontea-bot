@@ -1,4 +1,3 @@
-import imp
 from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, MessageEvent
 from nonebot.log import logger

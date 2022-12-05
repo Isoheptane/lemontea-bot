@@ -10,9 +10,9 @@ from . user_custom import UserData
 
 from PIL import ImageFont, ImageDraw, Image
 
-name_font   = ImageFont.truetype(notosans_regular, 36)
-info_font   = ImageFont.truetype(montserrat_semibold, 24)
-title_font   = ImageFont.truetype(notosans_medium, 24)
+name_font = ImageFont.truetype(notosans_regular, 36)
+info_font = ImageFont.truetype(montserrat_semibold, 24)
+title_font = ImageFont.truetype(notosans_medium, 24)
 
 b40_bg = Image.open(picture_path.joinpath("b40_bg.png"))
 b50_bg = Image.open(picture_path.joinpath("b50_bg.png"))
@@ -48,9 +48,11 @@ async def generate_best(info: Player, b50: bool, custom: UserData) -> Image.Imag
     if not custom.frame is None:
         result.paste(custom.frame, (600, 40))
     result.paste(b50_bg if b50 else b40_bg, (0, 0), mask = (b50_bg if b50 else b40_bg).split()[3])
+    
     # Draw user name
     if not custom.avatar is None:
         result.paste(custom.avatar.resize((180, 180)), (610, 50), mask = avatar_mask)
+    
     # Draw b40/b50 info
     draw.text(
         (825, 147), 
@@ -76,6 +78,7 @@ async def generate_best(info: Player, b50: bool, custom: UserData) -> Image.Imag
             anchor = "mm", 
             fill = (63, 63, 63), 
         )
+    
     # Draw DX Rating
     rating_image = generate_rating(base_rating if b50 else (info.base_rating + info.rank_rating), b50)
     result.paste(rating_image, (800, 40), mask = rating_image.split()[3])
