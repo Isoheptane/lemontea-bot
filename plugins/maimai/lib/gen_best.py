@@ -12,7 +12,7 @@ from PIL import ImageFont, ImageDraw, Image
 
 name_font   = ImageFont.truetype(notosans_regular, 36)
 info_font   = ImageFont.truetype(montserrat_semibold, 24)
-title_font   = ImageFont.truetype(notosans_regular, 24)
+title_font   = ImageFont.truetype(notosans_medium, 24)
 
 b40_bg = Image.open(picture_path.joinpath("b40_bg.png"))
 b50_bg = Image.open(picture_path.joinpath("b50_bg.png"))
@@ -28,9 +28,8 @@ def to_full_char(text: str) -> str:
     return s
 
 
-async def generate_best(info: Player, b50: bool, custom: UserData
-) -> Image.Image:
-    result = b50_bg.copy() if b50 else b40_bg.copy()
+async def generate_best(info: Player, b50: bool, custom: UserData) -> Image.Image:
+    result = Image.new("RGBA", b50_bg.size if b50 else b40_bg.size, (250, 250, 250, 255))
 
     base_rating = 0
 
@@ -45,12 +44,16 @@ async def generate_best(info: Player, b50: bool, custom: UserData
         base_rating += performance.rating
 
     draw = ImageDraw.Draw(result)
+    # Draw User Frame
+    if not custom.frame is None:
+        result.paste(custom.frame, (600, 40))
+    result.paste(b50_bg if b50 else b40_bg, (0, 0), mask = (b50_bg if b50 else b40_bg).split()[3])
     # Draw user name
     if not custom.avatar is None:
-        result.paste(custom.avatar.resize((180, 180)), (510, 50), mask = avatar_mask)
+        result.paste(custom.avatar.resize((180, 180)), (610, 50), mask = avatar_mask)
     # Draw b40/b50 info
     draw.text(
-        (725, 147), 
+        (825, 147), 
         to_full_char(info.nickname), 
         font = name_font, 
         anchor = "lm", 
@@ -58,7 +61,7 @@ async def generate_best(info: Player, b50: bool, custom: UserData
     )
     if custom.title != None:
         draw.text(
-            (935, 208), 
+            (1035, 208), 
             custom.title,
             font = title_font, 
             anchor = "mm", 
@@ -66,7 +69,7 @@ async def generate_best(info: Player, b50: bool, custom: UserData
         )
     else:
         draw.text(
-            (935, 210), 
+            (1035, 210), 
             f"Best 50 Simulation" if b50 else
             f"Best 40: {info.base_rating} + {info.rank_rating}",
             font = info_font, 
@@ -75,7 +78,7 @@ async def generate_best(info: Player, b50: bool, custom: UserData
         )
     # Draw DX Rating
     rating_image = generate_rating(base_rating if b50 else (info.base_rating + info.rank_rating), b50)
-    result.paste(rating_image, (700, 40), mask = rating_image.split()[3])
+    result.paste(rating_image, (800, 40), mask = rating_image.split()[3])
 
     # Draw best 25 / 35
     old_count = 0

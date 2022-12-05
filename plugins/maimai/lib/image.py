@@ -12,6 +12,7 @@ from .. path import resource_path
 montserrat_bold     = str(resource_path.joinpath("font", "Montserrat-Bold.ttf"))
 montserrat_semibold = str(resource_path.joinpath("font", "Montserrat-SemiBold.ttf"))
 notosans_bold       = str(resource_path.joinpath("font", "NotoSansSC-Bold.otf"))
+notosans_medium     = str(resource_path.joinpath("font", "NotoSansSC-Medium.otf"))
 notosans_regular    = str(resource_path.joinpath("font", "NotoSansSC-Regular.otf"))
 
 def image_to_bytes(image: Image.Image, format = "PNG"):

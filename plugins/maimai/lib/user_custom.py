@@ -1,47 +1,67 @@
-import os
+import io
+import json
+import base64
+from lib2to3.pgen2.token import OP
 from PIL import Image
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from .. path import custom_path
 
 class UserData:
     avatar: Optional[Image.Image]
-    bg_image: Optional[Image.Image]
+    frame: Optional[Image.Image]
     title: Optional[str]
 
-    def __init__(self, avatar, bg_image, title):
-        self.avatar = avatar
-        self.bg_image = bg_image
-        self.title = title
+    def __init__(self):
+        self.avatar = None
+        self.frame = None
+        self.title = None
 
 def get_user_custom(id: int) -> UserData:
-    user_path = custom_path.joinpath(str(id))
-    data = UserData(None, None, None)
-    if user_path.joinpath("avatar.png").exists():
-        avatar = Image.open(user_path.joinpath("avatar.png"))
-        data.avatar = avatar
-    if user_path.joinpath("bg_image.png").exists():
-        bg_image = Image.open(user_path.joinpath("bg_image.png"))
-        data.bg_image = bg_image
-    if user_path.joinpath("title").exists():
-        title = open(user_path.joinpath("title"), encoding = "utf-8", mode = "r").read().rstrip()
-        data.title = title
+    data = UserData()
+    user_path = custom_path.joinpath(f"{str(id)}.json")
+    if not user_path.exists():
+        return data
+
+    file = open(user_path, mode = "r")
+    profile: Dict[Any, Any] = json.load(file)
+    file.close()
+
+    if "avatar" in profile:
+        avatar_data = base64.b64decode(profile["avatar"])
+        data.avatar = Image.open(io.BytesIO(avatar_data))
+    if "frame" in profile:
+        frame_data = base64.b64decode(str(profile["frame"]))
+        data.frame = Image.open(io.BytesIO(frame_data))
+    if "title" in profile:
+        data.title = profile["title"]
+    
     return data
 
-def set_user_avatar(id: int, avatar: Image.Image):
-    user_path = custom_path.joinpath(str(id))
-    if not user_path.exists():
-        os.makedirs(user_path)
-    avatar.save(user_path.joinpath("avatar.png"))
+def set_user_data(id: int, key: str, value: Any):
+    user_path = custom_path.joinpath(f"{str(id)}.json")
+    if user_path.exists():
+        file = open(user_path, mode = "r")
+        profile: Dict[Any, Any] = json.load(file)
+        file.close()
+    else:
+        profile: Dict[Any, Any] = {}
 
-def set_user_bg_image(id: int, bg_image: Image.Image):
-    user_path = custom_path.joinpath(str(id))
-    if not user_path.exists():
-        os.makedirs(user_path)
-    bg_image.save(user_path.joinpath("bg_image.png"))
+    profile[key] = value
+    file = open(user_path, mode = "w")
+    file.write(json.dumps(profile))
+    file.close()
 
-def set_user_title(id: int, title: str):
-    user_path = custom_path.joinpath(str(id))
-    if not user_path.exists():
-        os.makedirs(user_path)
-    open(user_path.joinpath("title"), encoding = "utf-8", mode = "w").write(title)
+def unset_user_data(id: int, key: str):
+    user_path = custom_path.joinpath(f"{str(id)}.json")
+    if user_path.exists():
+        file = open(user_path, mode = "r")
+        profile: Dict[Any, Any] = json.load(file)
+        file.close()
+    else:
+        profile: Dict[Any, Any] = {}
+
+    profile.pop(key)
+    file = open(user_path, mode = "w")
+    file.write(json.dumps(profile))
+    file.close()

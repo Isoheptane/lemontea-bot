@@ -58,10 +58,9 @@ async def best(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegmen
         ]))
         return
 
-    if not qid is None:
+    if not qid == None:
         custom = get_user_custom(qid)
         if custom.avatar == None:
-            avatar = custom.avatar
             avatar = await download_image(f"https://q1.qlogo.cn/g?b=qq&nk={qid}&s=640")
             if (isinstance(avatar, Image.Image)):
                 custom.avatar = avatar
@@ -70,7 +69,7 @@ async def best(bot: Bot, event:MessageEvent, args: List[Union[str, MessageSegmen
                 image = await generate_best(info, b50)
         image = await generate_best(info, b50, custom)
     else:
-        image = await generate_best(info, b50, UserData(None, None, None))
+        image = await generate_best(info, b50, UserData())
     
     await bot.send(event, Message([
         MessageSegment.reply(event.message_id),
