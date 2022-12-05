@@ -20,7 +20,7 @@ async def scorelist(bot: Bot, event:MessageEvent, args: List[Union[str, MessageS
 
     if command in ["scorelistid", "分数列表id"]:
         if isinstance(args[1], MessageSegment) and args[1].type == "at":
-            qid = args[1].data["qq"]
+            info, status = await get_player_records("qq", args[1].data["qq"])
         else:
             info, status = await get_player_records("username", args[1])
             if (status == 400):
