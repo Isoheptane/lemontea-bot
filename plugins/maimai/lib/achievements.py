@@ -81,7 +81,7 @@ def compute_rating_new(level: float, achievements: float) -> int:
     elif (achievements < 98.0):
         rating = 20.0
     elif (achievements < 99.0):
-        rating = 20.0
+        rating = 20.3
     elif (achievements < 99.5):
         rating = 20.8
     elif (achievements < 100.0):
